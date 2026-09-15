@@ -1,4 +1,13 @@
 # COLON3D
+
+---
+
+This project presents a near real-time pipeline that reconstructs the 3D surface of the colon directly from standard monocular endoscopic videos. 
+
+By fusing deep learning-based depth and camera pose estimations into a TSDF volume, the system generates dense, metric 3D meshes of the observed mucosa. Crucially, it introduces a novel geometric approach based on Poisson Surface Reconstruction to explicitly locate, map, and quantify "missing regions" : anatomical areas obscured from the camera's line of sight. This framework lays the foundation for an objective, spatially-aware assessment of colonoscopy coverage.
+
+---
+
 Data and codes will be made available after acceptance
 
 ---
