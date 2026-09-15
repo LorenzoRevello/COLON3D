@@ -4,6 +4,7 @@ Data and codes will be made available after acceptance
 
 ### Folder Architecture
 
+```text
 COLON3D
 ├── 📂 DATA/                          
 │   └── 📂 S/
@@ -13,7 +14,9 @@ COLON3D
 ├── 📂 Colonoscopy-Depth-Estimation-main/ 
 ├── 📄 main.py     
 ├── 📄 requirements.txt                         
-└── 📄 README.md                
+└── 📄 README.md
+            
+```
 
 ### 3D reconstruction in Near-Real-Time
 
@@ -24,6 +27,6 @@ Starting from monocular endoscopy frames, the system estimates depth and camera 
 
 ### Missing Region Analysis
 
-<img width="1788" height="1218" alt="photo_5834758139167837872_w" src="https://github.com/user-attachments/assets/97d47a3c-06f3-436b-b03f-5cbd0a72182d" />
+<img width="1030" height="730" alt="photo_5834758139167837872_w" src="https://github.com/user-attachments/assets/97d47a3c-06f3-436b-b03f-5cbd0a72182d" />
 
 The extracted Missing Regions can be individually visualized and studied directly on the reconstructed anatomy.
