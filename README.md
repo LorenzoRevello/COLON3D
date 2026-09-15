@@ -20,7 +20,9 @@ COLON3D
 
 ### 3D reconstruction in Near-Real-Time
 
-https://github.com/user-attachments/assets/7aa263ad-de19-4aac-bcfa-f058d9cf9d16
+
+https://github.com/user-attachments/assets/7bafcb44-d8aa-451e-973d-7399ddb69700
+
 
 Starting from monocular endoscopy frames, the system estimates depth and camera pose, using this information to generate a 3D visualization of the observed surface.
 
