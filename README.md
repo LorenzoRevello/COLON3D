@@ -1,6 +1,7 @@
 # COLON3D
 Data and codes will be made available after acceptance
 
+---
 
 ### Folder Architecture
 
@@ -18,6 +19,8 @@ COLON3D
             
 ```
 
+---
+
 ### 3D reconstruction in Near-Real-Time
 
 
@@ -25,6 +28,8 @@ https://github.com/user-attachments/assets/7bafcb44-d8aa-451e-973d-7399ddb69700
 
 
 Starting from monocular endoscopy frames, the system estimates depth and camera pose, using this information to generate a 3D visualization of the observed surface.
+
+---
 
 
 ### Missing Region Analysis
