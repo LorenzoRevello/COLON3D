@@ -32,6 +32,10 @@ COLON3D
 │       └── 📄 cam.txt                   
 ├── 📂 bimodal_camera_pose/               
 ├── 📂 Colonoscopy-Depth-Estimation-main/ 
+├── 📂 Poisson validation/
+│    └── 📄Poisson_validation.py 
+│    └── 📄MR_extraction_with_Trimesh.py 
+│    └── 📄MR_extraction_without_Poisson.py     
 ├── 📄 main.py     
 ├── 📄 requirements.txt                         
 └── 📄 README.md
@@ -56,3 +60,5 @@ Starting from monocular endoscopy frames, the system estimates depth and camera 
 <img width="1030" height="730" alt="photo_5834758139167837872_w" src="https://github.com/user-attachments/assets/97d47a3c-06f3-436b-b03f-5cbd0a72182d" />
 
 The extracted Missing Regions can be individually visualized and studied directly on the reconstructed anatomy.
+
+
