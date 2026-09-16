@@ -8,7 +8,17 @@ By fusing deep learning-based depth and camera pose estimations into a TSDF volu
 
 ---
 
-Data and codes will be made available after acceptance
+## Code and Data
+
+Full Data and codes will be made available after acceptance
+
+---
+
+Main script : [main.py](main.py).
+
+Unity dataset acquisition : [simulator](https://github.com/zsustc/colon_reconstruction_dataset)
+
+Poisson Validation : [Poisson_validation.py](Poisson_validation.py)
 
 ---
 
