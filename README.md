@@ -21,6 +21,38 @@ By fusing deep learning-based depth and camera pose estimations into a TSDF volu
 
 Full Data and codes will be made available after acceptance
 
+### Getting all repository files
+
+The repository uses [Git Large File Storage (Git LFS)](https://git-lfs.com/) for
+the trained model checkpoints and other large training artifacts. Install Git
+LFS before cloning so that both the regular Git files and the large files are
+downloaded:
+
+```bash
+git lfs install
+git clone https://github.com/LorenzoRevello/COLON3D.git
+cd COLON3D
+git lfs pull
+```
+
+The final `git lfs pull` is safe to run after a normal clone and ensures that
+all LFS files are present locally. Without Git LFS, large files may appear only
+as small pointer files. To download them in an existing checkout, run:
+
+```bash
+git lfs install
+git lfs pull
+```
+
+You can check which files are managed by LFS with:
+
+```bash
+git lfs ls-files
+```
+
+Git LFS access is required to download the model checkpoints. The remaining
+source code and regular repository files continue to use standard Git commands.
+
 ---
 
 Main script : [main.py](main.py).
