@@ -55,7 +55,17 @@ source code and regular repository files continue to use standard Git commands.
 
 ---
 
+## Code gay References 
+
 Main script : [main.py](main.py).
+
+Depth Estimation code : [SUMNet_depth_test.py](SUMNet_depth_test.py)
+
+Depth Estimation reference : [Depthnet](https://github.com/SistaRaviteja/Colonoscopy-Depth-Estimation)
+
+Pose Estimation code : [test.py](test.py)
+
+Pose Estimation reference : [Posenet](https://github.com/anitarau/simcol/tree/main/bimodal_camera_pose)
 
 Unity dataset acquisition : [simulator](https://github.com/zsustc/colon_reconstruction_dataset)
 
@@ -63,7 +73,7 @@ Poisson Validation : [Poisson_validation.py](Poisson_validation.py)
 
 ---
 
-### Folder Architecture
+## Folder Architecture
 
 ```text
 COLON3D
@@ -93,7 +103,7 @@ COLON3D
 
 ---
 
-### 3D reconstruction in Near-Real-Time
+## 3D reconstruction in Near-Real-Time
 
 <figure>
 https://github.com/user-attachments/assets/7bafcb44-d8aa-451e-973d-7399ddb69700
@@ -105,7 +115,7 @@ https://github.com/user-attachments/assets/7bafcb44-d8aa-451e-973d-7399ddb69700
 ---
 
 
-### Missing Region Analysis
+## Missing Region Analysis
 <figure>
             <img width="1030" height="730" alt="photo_5834758139167837872_w" src="https://github.com/user-attachments/assets/97d47a3c-06f3-436b-b03f-5cbd0a72182d" />
             <figcaption>The extracted Missing Regions can be individually visualized and studied directly on the reconstructed anatomy.</figcaption>
