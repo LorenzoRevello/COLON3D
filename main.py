@@ -1,5 +1,5 @@
 """
-NUOVO_RECONSTRUCTION+POSE_REALTIME.py
+main.py
 =====================================
 Pipeline Real-time integrata:
   1. DEPTH estimation frame-by-frame with SUMNet
@@ -153,11 +153,7 @@ class SUMNet(nn.Module):
 
 
 # ══════════════════════════════════════════════════════════════════════
-#  POSE ESTIMATION UTILITIES
-# ══════════════════════════════════════════════════════════════════════
-
-# ══════════════════════════════════════════════════════════════════════
-#  SIMCOL3D UTILITIES
+#   UTILITIES
 # ══════════════════════════════════════════════════════════════════════
 
 def load_intrinsics(path):
