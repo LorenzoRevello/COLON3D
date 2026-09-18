@@ -19,8 +19,6 @@ By fusing deep learning-based depth and camera pose estimations into a TSDF volu
 
 ## Code and Data
 
-Full Data and codes will be made available after acceptance
-
 ### Getting all repository files
 
 The repository uses [Git Large File Storage (Git LFS)](https://git-lfs.com/) for
@@ -55,7 +53,7 @@ source code and regular repository files continue to use standard Git commands.
 
 ---
 
-## Code gay References 
+## Code References 
 
 Main script : [main.py](main.py).
 
