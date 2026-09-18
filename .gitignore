@@ -1,0 +1,10 @@
+# Generated model checkpoints and training artifacts
+*.pt
+*.pth
+*.pth.tar
+*.tar
+*.ckpt
+events.out.tfevents.*
+
+# Experiment tracking output
+wandb/
