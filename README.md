@@ -17,59 +17,104 @@ By fusing deep learning-based depth and camera pose estimations into a TSDF volu
 
 ---
 
-## Code and Data
+## Requirements
 
-### Getting all repository files
+- Linux (Ubuntu 20.04 or newer recommended)
+- Python 3.10 (Python 3.8--3.10 is supported)
+- NVIDIA GPU plus a matching CUDA-enabled PyTorch build is strongly recommended. CPU execution is supported, but much slower.
+- A graphical desktop session: the pipeline opens an interactive Open3D visualizer. For a remote machine, use VNC/remote desktop with OpenGL support.
 
-The repository uses [Git Large File Storage (Git LFS)](https://git-lfs.com/) for
-the trained model checkpoints and other large training artifacts. Install Git
-LFS before cloning so that both the regular Git files and the large files are
-downloaded:
-
-```bash
-git lfs install
-git clone https://github.com/LorenzoRevello/COLON3D.git
-cd COLON3D
-git lfs pull
-```
-
-The final `git lfs pull` is safe to run after a normal clone and ensures that
-all LFS files are present locally. Without Git LFS, large files may appear only
-as small pointer files. To download them in an existing checkout, run:
+On Ubuntu, install the system packages for virtual environments, Tk, and Open3D:
 
 ```bash
-git lfs install
-git lfs pull
+sudo apt update
+sudo apt install -y python3.10 python3.10-venv python3-tk libgl1 libglib2.0-0
 ```
 
-You can check which files are managed by LFS with:
+## Installation
+
+Clone the repository and enter it:
 
 ```bash
-git lfs ls-files
+git clone <YOUR_REPOSITORY_URL> simcol3d-reconstruction
+cd simcol3d-reconstruction
 ```
 
-Git LFS access is required to download the model checkpoints. The remaining
-source code and regular repository files continue to use standard Git commands.
+If the large model files are stored through Git LFS, install Git LFS before cloning or run `git lfs pull` after cloning. Check that these files exist (they are about 286 MB and 291 MB):
 
----
+```text
+Colonoscopy-Depth-Estimation-main/sumnet_model/checkpoint_50.pt
+bimodal_camera_pose/trained_models/posenet_binned/posenet.tar
+```
 
-## Code References 
+Create and activate a virtual environment:
 
-Main script : [main.py](main.py).
+```bash
+python3.10 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+```
 
-Depth Estimation code : [SUMNet_depth_test.py](SUMNet_depth_test.py)
+Install PyTorch first. Choose the CUDA command for the machine from the [official PyTorch installer](https://pytorch.org/get-started/locally/). For CPU-only execution:
 
-Depth Estimation reference : [Depthnet](https://github.com/SistaRaviteja/Colonoscopy-Depth-Estimation)
+```bash
+python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+```
 
-Pose Estimation code : [test.py](test.py)
+Install the rest of the dependencies and verify the environment:
 
-Pose Estimation reference : [Posenet](https://github.com/anitarau/simcol/tree/main/bimodal_camera_pose)
+```bash
+python -m pip install -r requirements.txt
+python -c "import cv2, numpy, open3d, torch, torchvision; print('PyTorch:', torch.__version__); print('CUDA available:', torch.cuda.is_available()); print('Open3D:', open3d.__version__)"
+```
 
-Unity dataset acquisition : [simulator](https://github.com/zsustc/colon_reconstruction_dataset)
+## Prepare the input scene
 
-Poisson Validation : [Poisson_validation.py](Poisson_validation.py)
+Download **SyntheticColon I** from the [SimCol3D dataset page](https://rdr.ucl.ac.uk/articles/dataset/Simcol3D_-_3D_Reconstruction_during_Colonoscopy_Challenge_Dataset/24077763). For the default scene, `S4`, create this layout:
 
----
+```text
+DATA/
+└── S4/
+    ├── cam.txt
+    └── Frames/
+        ├── FrameBuffer_0000.png
+        ├── FrameBuffer_0001.png
+        └── ...
+```
+
+- `Frames/` must contain RGB files named `FrameBuffer_*.png`.
+- `cam.txt` must contain the 3 × 3 SimCol3D camera-intrinsic matrix supplied with the dataset.
+- To choose another scene, change `SCENE = "S4"` in [main.py](main.py).
+
+For a dataset arranged as `Frames_S4` with a shared calibration file:
+
+```bash
+mkdir -p DATA/S4
+cp /path/to/dataset/cam.txt DATA/S4/cam.txt
+cp -a /path/to/dataset/Frames_S4 DATA/S4/Frames
+test -f DATA/S4/cam.txt
+find DATA/S4/Frames -maxdepth 1 -name 'FrameBuffer_*.png' | head
+```
+
+## Run the reconstruction
+
+From the repository root, with the virtual environment active:
+
+```bash
+python main.py
+```
+
+The first run may download the ImageNet VGG11 weights required by SUMNet; keep an internet connection available until it completes. The application displays the live reconstruction and later asks whether to visualize the cleaned mesh and run Poisson closing. Answer each prompt with `y` or `n`.
+
+Results are written to:
+
+```text
+DATA/<SCENE>/output_realtime/
+├── mesh_tsdf_realtime.ply
+├── SavedPosition.txt
+├── SavedRotationQuaternion.txt
+└── mesh_closed_poisson_realtime.ply  # when Poisson closing is selected
+```
 
 ## Folder Architecture
 
@@ -97,6 +142,28 @@ COLON3D
 ├── 📄 requirements.txt                         
 └── 📄 README.md
             
+```
+
+## Troubleshooting
+
+| Symptom | Resolution |
+| --- | --- |
+| Checkpoint `FileNotFoundError` | Ensure Git LFS completed and both model files listed above are present. |
+| `No frames found. Check paths.` | Ensure `DATA/<SCENE>/Frames/` contains `FrameBuffer_*.png` and that `SCENE` matches the folder name. |
+| Missing `cam.txt` | Copy the scene calibration file to `DATA/<SCENE>/cam.txt`. |
+| `No module named 'tkinter'` | Install `python3-tk`, then recreate or reactivate the virtual environment. |
+| `libGL.so.1` / Open3D import error | Install `libgl1 libglib2.0-0`. |
+| Empty Open3D window on a server | Use a graphical desktop or VNC session with OpenGL; plain SSH cannot open the viewer. |
+| CUDA is unavailable | Install the CUDA build of PyTorch selected from the official installer. CPU execution still works. |
+
+## Project layout
+
+```text
+main.py                            # integrated reconstruction entry point
+requirements.txt                   # Python dependencies
+Colonoscopy-Depth-Estimation-main/ # SUMNet depth model and checkpoint
+bimodal_camera_pose/               # PoseCorrNet model and checkpoint
+DATA/                              # user-supplied SimCol3D scenes
 ```
 
 ---
