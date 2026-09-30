@@ -1,6 +1,7 @@
 # COLON3D
 
 ---
+<br>
 
 This project presents a near real-time pipeline that reconstructs the 3D surface of the colon directly from standard monocular endoscopic videos. 
 
@@ -16,6 +17,7 @@ By fusing deep learning-based depth and camera pose estimations into a TSDF volu
 </figure>
 
 ---
+<br>
 
 ## Requirements
 
@@ -30,6 +32,8 @@ On Ubuntu, install the system packages for virtual environments, Tk, and Open3D:
 sudo apt update
 sudo apt install -y python3.10 python3.10-venv python3-tk libgl1 libglib2.0-0
 ```
+---
+<br>
 
 ## Installation
 
@@ -67,6 +71,8 @@ Install the rest of the dependencies and verify the environment:
 python -m pip install -r requirements.txt
 python -c "import cv2, numpy, open3d, torch, torchvision; print('PyTorch:', torch.__version__); print('CUDA available:', torch.cuda.is_available()); print('Open3D:', open3d.__version__)"
 ```
+---
+<br>
 
 ## Prepare the input scene
 
@@ -95,6 +101,8 @@ cp -a /path/to/dataset/Frames_S4 DATA/S4/Frames
 test -f DATA/S4/cam.txt
 find DATA/S4/Frames -maxdepth 1 -name 'FrameBuffer_*.png' | head
 ```
+---
+<br>
 
 ## Run the reconstruction
 
@@ -115,6 +123,9 @@ DATA/<SCENE>/output_realtime/
 ├── SavedRotationQuaternion.txt
 └── mesh_closed_poisson_realtime.ply  # when Poisson closing is selected
 ```
+
+---
+<br>
 
 ## Folder Architecture
 
@@ -143,6 +154,8 @@ COLON3D
 └── 📄 README.md
             
 ```
+---
+<br>
 
 ## Troubleshooting
 
@@ -166,18 +179,17 @@ bimodal_camera_pose/               # PoseCorrNet model and checkpoint
 DATA/                              # user-supplied SimCol3D scenes
 ```
 
+
 ---
+<br>
 
 ## 3D reconstruction in Near-Real-Time
 
-<figure>
-https://github.com/user-attachments/assets/7bafcb44-d8aa-451e-973d-7399ddb69700
+<video src="https://github.com/user-attachments/assets/7bafcb44-d8aa-451e-973d-7399ddb69700" autoplay loop muted playsinline></video>
 
 
-<figcaption>Starting from monocular endoscopy frames, the system estimates depth and camera pose, using this information to generate a 3D visualization of the observed surface.</figcaption>
-
-</figure>
 ---
+<br>
 
 
 ## Missing Region Analysis
