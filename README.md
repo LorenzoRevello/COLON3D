@@ -40,8 +40,8 @@ sudo apt install -y python3.10 python3.10-venv python3-tk libgl1 libglib2.0-0
 Clone the repository and enter it:
 
 ```bash
-git clone <YOUR_REPOSITORY_URL> simcol3d-reconstruction
-cd simcol3d-reconstruction
+git clone <https://github.com/LorenzoRevello/COLON3D> COLON3D
+cd COLON3D
 ```
 
 If the large model files are stored through Git LFS, install Git LFS before cloning or run `git lfs pull` after cloning. Check that these files exist (they are about 286 MB and 291 MB):
