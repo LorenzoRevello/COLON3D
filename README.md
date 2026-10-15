@@ -40,7 +40,7 @@ sudo apt install -y python3.10 python3.10-venv python3-tk libgl1 libglib2.0-0
 Clone the repository and enter it:
 
 ```bash
-git clone <https://github.com/LorenzoRevello/COLON3D> COLON3D
+git clone https://github.com/LorenzoRevello/COLON3D COLON3D
 cd COLON3D
 ```
 
