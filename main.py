@@ -33,7 +33,7 @@ import tkinter as tk
 from tkinter import Listbox, Button, Label
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
+PROJECT_ROOT = SCRIPT_DIR
 
 # ✅ IMPORT POSE ESTIMATION UTILITIES
 sys.path.insert(0, str(PROJECT_ROOT / "bimodal_camera_pose"))
