@@ -4,9 +4,9 @@
 
 <br>
 
-This project presents a near real-time pipeline that reconstructs the 3D surface of the colon directly from standard monocular endoscopic videos.
+COLON3D is a near real-time pipeline for reconstructing the 3D surface of the colon from standard monocular endoscopic videos.
 
-By fusing deep learning-based depth and camera-pose estimations into a TSDF volume, the system generates dense, metric 3D meshes of the observed mucosa. It also uses Poisson Surface Reconstruction to locate, map, and quantify *missing regions*: anatomical areas obscured from the camera’s line of sight.
+It combines deep-learning depth and camera-pose estimation with TSDF fusion to generate dense metric 3D meshes of the observed mucosa. The pipeline also applies Poisson Surface Reconstruction to identify, map, and quantify *missing regions*: anatomical areas obscured from the camera’s line of sight.
 
 <figure>
   <img width="1268" height="793" alt="COLON3D full pipeline" src="https://github.com/user-attachments/assets/9fc426dd-b2e3-4ece-b157-9cc01f3b4b2e" />
@@ -21,11 +21,11 @@ By fusing deep learning-based depth and camera-pose estimations into a TSDF volu
 
 - Linux (Ubuntu 20.04 or newer recommended)
 - [Miniconda or Anaconda](https://docs.conda.io/en/latest/miniconda.html)
-- Python 3.10, installed in a dedicated Conda environment
-- NVIDIA GPU and a matching CUDA-enabled PyTorch build are strongly recommended. CPU execution is supported but substantially slower.
+- Python 3.10 in a dedicated Conda environment
+- NVIDIA GPU recommended for practical execution time
 - A graphical desktop session with OpenGL support. For remote machines, use VNC or remote desktop; plain SSH cannot display the Open3D visualizer.
 
-Do not install the project dependencies in Conda’s `base` environment.
+> Do not install the project dependencies in Conda’s `base` environment.
 
 ---
 
@@ -34,8 +34,6 @@ Do not install the project dependencies in Conda’s `base` environment.
 ## Installation
 
 ### 1. Install system dependencies and Git LFS
-
-On Ubuntu, run:
 
 ```bash
 sudo apt update
@@ -51,7 +49,7 @@ cd COLON3D
 git lfs pull
 ```
 
-The two checkpoint files must be present and have sizes of roughly 274–278 MB:
+Verify that the checkpoints were downloaded correctly:
 
 ```bash
 ls -lh \
@@ -59,11 +57,18 @@ ls -lh \
   bimodal_camera_pose/trained_models/posenet_binned/posenet.tar
 ```
 
-Expected files:
+Both files must have a size of approximately 274–278 MB:
 
 ```text
 Colonoscopy-Depth-Estimation-main/sumnet_model/checkpoint_50.pt
 bimodal_camera_pose/trained_models/posenet_binned/posenet.tar
+```
+
+If the files are only a few bytes long, Git LFS downloaded pointers rather than the actual weights. Run:
+
+```bash
+git lfs install
+git lfs pull
 ```
 
 ### 3. Create and activate the Conda environment
@@ -76,20 +81,34 @@ conda install -y tk
 python -m pip install --upgrade pip setuptools wheel
 ```
 
-Every subsequent command must be run with the `colon3d` environment active:
+For every subsequent command, make sure the environment is active:
 
 ```bash
 conda activate colon3d
 ```
 
-### 4. Install PyTorch
+### 4. Install PyTorch with CUDA support
 
-Install a PyTorch build compatible with your NVIDIA driver and CUDA setup using the [official PyTorch installer](https://pytorch.org/get-started/locally/).
-
-For CPU-only execution, use:
+The tested configuration uses a driver compatible with CUDA 12.8. Install the matching PyTorch build explicitly:
 
 ```bash
-python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+python -m pip install \
+  torch==2.7.1 \
+  torchvision==0.22.1 \
+  --index-url https://download.pytorch.org/whl/cu128
+```
+
+> Do not install PyTorch with plain `pip install torch torchvision` on this setup: it may install a CUDA 13 build that is incompatible with older NVIDIA drivers and causes `torch.cuda.is_available()` to return `False`.
+
+For a different GPU or driver, select the appropriate CUDA build from the [official PyTorch installer](https://pytorch.org/get-started/locally/).
+
+For CPU-only execution:
+
+```bash
+python -m pip install \
+  torch==2.7.1 \
+  torchvision==0.22.1 \
+  --index-url https://download.pytorch.org/whl/cpu
 ```
 
 ### 5. Install the remaining Python dependencies
@@ -98,10 +117,18 @@ python -m pip install torch torchvision --index-url https://download.pytorch.org
 python -m pip install -r requirements.txt
 ```
 
-Verify the environment:
+Verify the environment and GPU access:
 
 ```bash
-python -c "import cv2, numpy, open3d, torch, torchvision; print('PyTorch:', torch.__version__); print('CUDA available:', torch.cuda.is_available()); print('Open3D:', open3d.__version__)"
+python -c "import cv2, numpy, open3d, torch, torchvision; print('PyTorch:', torch.__version__); print('CUDA build:', torch.version.cuda); print('CUDA available:', torch.cuda.is_available()); print('GPU:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'not available'); print('Open3D:', open3d.__version__)"
+```
+
+A correctly configured CUDA installation should report:
+
+```text
+PyTorch: 2.7.1+cu128
+CUDA build: 12.8
+CUDA available: True
 ```
 
 ---
@@ -145,7 +172,7 @@ find DATA/S4/Frames -maxdepth 1 -name 'FrameBuffer_*.png' | head
 
 ## Run the reconstruction
 
-From the repository root, activate the environment and run:
+From the repository root:
 
 ```bash
 conda activate colon3d
@@ -154,7 +181,7 @@ python main.py
 
 On first execution, SUMNet may download the ImageNet VGG11 weights. Keep an internet connection available until this download has completed.
 
-The application opens a live Open3D visualization, then asks whether to visualize the cleaned mesh and run Poisson closing. Answer the prompts with `y` or `n`.
+The application opens a live Open3D visualization, then asks whether to visualize the cleaned mesh and run Poisson closing. Answer each prompt with `y` or `n`.
 
 Results are written to:
 
@@ -167,7 +194,7 @@ DATA/<SCENE>/output_realtime/
 └── mesh_closed_poisson_realtime_missing_regions.ply
 ```
 
-The Poisson mesh and missing-regions mesh are created only when the respective options are selected.
+The Poisson mesh and missing-regions mesh are created only when the corresponding options are selected.
 
 ---
 
@@ -200,15 +227,15 @@ COLON3D/
 
 | Symptom | Resolution |
 | --- | --- |
-| Checkpoint `FileNotFoundError` | Run `git lfs pull`, then verify the two checkpoint files with the `ls -lh` command above. |
-| Checkpoint files are only a few bytes | Git LFS has not downloaded the real weights. Run `git lfs install` followed by `git lfs pull`. |
+| Checkpoint `FileNotFoundError` | Run `git lfs pull`, then verify both checkpoint files with the `ls -lh` command above. |
+| Checkpoints are only a few bytes long | Run `git lfs install` followed by `git lfs pull`. |
 | `No frames found. Check paths.` | Ensure `DATA/<SCENE>/Frames/` contains `FrameBuffer_*.png` and that `SCENE` matches the folder name. |
-| Missing `cam.txt` | Copy the scene calibration file to `DATA/<SCENE>/cam.txt`. |
+| Missing `cam.txt` | Copy the calibration file to `DATA/<SCENE>/cam.txt`. |
 | `No module named 'tkinter'` | Activate the environment and run `conda install -y tk`. |
-| `libGL.so.1` or Open3D import error | Install the system libraries with `sudo apt install -y libgl1 libglib2.0-0`. |
-| Empty Open3D window on a server | Use a graphical desktop or a VNC session with OpenGL support; plain SSH cannot open the viewer. |
-| CUDA is unavailable | Install the CUDA-enabled PyTorch build chosen from the official PyTorch installer. CPU execution remains available. |
-| Packages were installed in Conda `base` | Create and activate the dedicated environment with `conda create -n colon3d python=3.10 -y` and `conda activate colon3d`, then reinstall the project dependencies there. |
+| `libGL.so.1` or Open3D import error | Run `sudo apt install -y libgl1 libglib2.0-0`. |
+| `CUDA available: False` and a warning about an old NVIDIA driver | Install the CUDA 12.8 PyTorch build specified above. A CUDA 13 build is incompatible with this driver. |
+| Empty Open3D window on a server | Use a graphical desktop or VNC session with OpenGL support; plain SSH cannot open the viewer. |
+| Packages were installed in Conda `base` | Create and activate the dedicated environment with `conda create -n colon3d python=3.10 -y` and `conda activate colon3d`, then reinstall the dependencies. |
 
 ---
 
