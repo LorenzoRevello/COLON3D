@@ -57,12 +57,15 @@ ls -lh \
   bimodal_camera_pose/trained_models/posenet_binned/posenet.tar
 ```
 
-Both files must have a size of approximately 274–278 MB:
+Exytact the files in the same folders. They must have a size of approximately 274–278 MB:
 
 ```text
 Colonoscopy-Depth-Estimation-main/sumnet_model/checkpoint_50.pt
 bimodal_camera_pose/trained_models/posenet_binned/posenet.tar
 ```
+
+
+
 
 If the files are only a few bytes long, Git LFS downloaded pointers rather than the actual weights. Run:
 
