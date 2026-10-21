@@ -1030,7 +1030,7 @@ def poisson_closing_pipeline(mesh_original, trajectory_xyz, output_path, poisson
         print(f"Saved: {output_path}")
 
     if missing_mesh is not None and input("Save missing regions mesh? (y/n): ").strip().lower() in ["y", "yes"]:
-        mp = output_path.replace("mesh_closed_poisson_realtime.ply", "missing_regions.ply")
+        mp = output_path.replace("closed_mesh.ply", "missing_regions.ply")
         missing_save = o3d.geometry.TriangleMesh(missing_mesh)
         missing_save.paint_uniform_color([1.0, 0.0, 0.0])
         o3d.io.write_triangle_mesh(mp, missing_save)
