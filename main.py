@@ -1084,7 +1084,7 @@ def accumulate_pose_mm(current_pose, trans_rel, rot_rel):
 # ══════════════════════════════════════════════════════════════════════
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
+PROJECT_ROOT = SCRIPT_DIR
 sys.path.insert(0, str(PROJECT_ROOT / "bimodal_camera_pose"))
 SCENE = "S4"
 BASE_PATH = SCRIPT_DIR / "DATA" / SCENE
