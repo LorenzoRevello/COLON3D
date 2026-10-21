@@ -1030,7 +1030,7 @@ def poisson_closing_pipeline(mesh_original, trajectory_xyz, output_path, poisson
         print(f"Saved: {output_path}")
 
     if missing_mesh is not None and input("Save missing regions mesh? (y/n): ").strip().lower() in ["y", "yes"]:
-        mp = output_path.replace(".ply", "_missing_regions.ply")
+        mp = output_path.replace("mesh_closed_poisson_realtime.ply", "missing_regions.ply")
         missing_save = o3d.geometry.TriangleMesh(missing_mesh)
         missing_save.paint_uniform_color([1.0, 0.0, 0.0])
         o3d.io.write_triangle_mesh(mp, missing_save)
@@ -1329,7 +1329,7 @@ def main():
         o3d.visualization.draw_geometries([mesh_original], window_name="Reconstruction (Cleaned)", width=1280, height=720, mesh_show_back_face=True)
 
     # 12. SAVE MESH
-    mesh_filtered_out = str(output_dir / "mesh_tsdf_realtime.ply")
+    mesh_filtered_out = str(output_dir / "reconstruction.ply")
     o3d.io.write_triangle_mesh(mesh_filtered_out, mesh_original)
     print(f"✅ Mesh saved: {mesh_filtered_out}")
     print(f"   Vertices: {len(mesh_original.vertices):,}, Triangles: {len(mesh_original.triangles):,}")
@@ -1340,7 +1340,7 @@ def main():
     
     if input("\nProceed with Poisson closing? (y/n): ").strip().lower() in ["y", "yes"]:
         trajectory_xyz = trajectory_from_poses(poses_estimated)
-        closed_out = str(output_dir / "mesh_closed_poisson_realtime.ply")
+        closed_out = str(output_dir / "closed_mesh.ply")
         
         closed_mesh, missing_mesh, stats, timing = poisson_closing_pipeline(
             mesh_original, trajectory_xyz, closed_out,
